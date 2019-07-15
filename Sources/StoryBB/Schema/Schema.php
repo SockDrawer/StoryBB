@@ -29,6 +29,72 @@ class Schema
 	public static function get_tables(): array
 	{
 		return [
+			Table::make('achieve', 
+				[
+					'id_achieve' => Column::smallint()->auto_increment(),
+					'achievement_name' => Column::varchar(255),
+					'achievement_desc' => Column::text(),
+					'achievement_type' => Column::tinyint(),
+				],
+				[
+					Index::primary(['id_achieve']),
+				]
+			),
+			Table::make('achieve_rule',
+				[
+					'id_achieve_rule' => Column::int()->auto_increment(),
+					'id_achieve' => Column::smallint(),
+					'ruleset' => Column::tinyint(),
+					'rule' => Column::tinyint(),
+					'criteria_type' => Column::varchar(100),
+					'criteria' => Column::text(),
+				],
+				[
+					Index::primary(['id_achieve_rule']),
+					Index::unique(['id_achieve', 'ruleset', 'rule']),
+				]
+			),
+			Table::make('achieve_rule_unlock',
+				[
+					'id_achieve_rule_unlock' => Column::int()->auto_increment(),
+					'id_achieve' => Column::smallint(),
+					'ruleset' => Column::tinyint(),
+					'rule' => Column::tinyint(),
+					'criteria_type' => Column::varchar(100),
+					'criteria' => Column::text(),
+				],
+				[
+					Index::primary(['id_achieve_rule_unlock']),
+					Index::unique(['id_achieve', 'ruleset', 'rule']),
+				]
+			),
+			Table::make('achieve_user',
+				[
+					'id_achieve_award' => Column::int()->auto_increment(),
+					'id_achieve' => Column::smallint(),
+					'id_member' => Column::mediumint(),
+					'id_character' => Column::int(),
+					'awarded_time' => Column::int(),
+					'awarded_by' => Column::mediumint(),
+				],
+				[
+					Index::primary(['id_achieve_award']),
+					Index::key(['id_member', 'id_character']),
+				]
+			),
+			Table::make('achieve_user_unlock',
+				[
+					'id_achieve_unlock' => Column::int()->auto_increment(),
+					'id_achieve' => Column::smallint(),
+					'id_member' => Column::mediumint(),
+					'id_character' => Column::int(),
+					'unlock_time' => Column::int(),
+				],
+				[
+					Index::primary(['id_achieve_unlock']),
+					Index::key(['id_member', 'id_character']),
+				]
+			),
 			Table::make('admin_info_files',
 				[
 					'id_file' => Column::tinyint()->auto_increment(),

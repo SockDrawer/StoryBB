@@ -12,6 +12,7 @@
 namespace StoryBB\Task\Schedulable;
 
 use StoryBB\Task;
+use StoryBB\Achievement;
 
 /**
  * Daily maintenance.
@@ -30,6 +31,10 @@ class DailyMaintenance extends \StoryBB\Task\Schedulable
 		$this->update_warning_levels();
 
 		$this->prune_login_history();
+
+		// Do the birthday achievements.
+		Achievement::trigger_award_achievement('account_birthday');
+		Achievement::trigger_award_achievement('character_birthday');
 
 		// Log we've done it...
 		return true;
