@@ -29,6 +29,7 @@ class Achievement
 		return [
 			'account_birthday' => 'StoryBB\\Achievement\\Criteria\\AccountBirthday',
 			'character_birthday' => 'StoryBB\\Achievement\\Criteria\\CharacterBirthday',
+			'character_topic_starter' => 'StoryBB\\Achievement\\Criteria\\CharacterTopicStarter',
 		];
 	}
 
