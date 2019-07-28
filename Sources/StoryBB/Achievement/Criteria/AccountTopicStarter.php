@@ -12,13 +12,13 @@
 
 namespace StoryBB\Achievement\Criteria;
 
-use StoryBB\Achievement\CharacterAchievement;
+use StoryBB\Achievement\AccountAchievement;
 use StoryBB\Achievement\UnlockableAchievement;
 
 /**
  * This class handles identifying whether a character has a birthday or not.
  */
-class CharacterTopicStarter extends AbstractCriteria implements CharacterAchievement, UnlockableAchievement
+class AccountTopicStarter extends AbstractCriteria implements AccountAchievement, UnlockableAchievement
 {
 	public static function parameters(): array
 	{
@@ -55,7 +55,7 @@ class CharacterTopicStarter extends AbstractCriteria implements CharacterAchieve
 			INNER JOIN {db_prefix}characters AS chars ON (chars.id_character = m.id_character)
 			WHERE m.id_creator != {int:empty_id_acc}
 			    AND m.id_character != {int:empty_id_char}
-			    AND chars.is_main = {int:not_main}
+			    AND chars.is_main = {int:is_main}
 			    AND t.approved = {int:topic_approved}
 			    AND m.approved = {int:message_approved}' . (!empty($account_id) && !empty($character_id) ? '
 			    AND m.id_creator = {int:account_id}
@@ -66,7 +66,7 @@ class CharacterTopicStarter extends AbstractCriteria implements CharacterAchieve
 			[
 				'empty_id_acc' => 0,
 				'empty_id_char' => 0,
-				'not_main' => 0,
+				'is_main' => 1,
 				'topic_approved' => 1,
 				'message_approved' => 1,
 				'account_id' => $account_id,
