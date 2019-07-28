@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 declare(strict_types=1);
@@ -146,6 +146,11 @@ class Theme
 		return $theme_settings;
 	}
 
+	/**
+	 * Gets a list of themes from the system, returning an array of themes each containing a name and folder.
+	 *
+	 * @return array A list of themes arranged by theme id, containing name and theme_dir properties
+	 */
 	public static function get_theme_list(): array
 	{
 		global $smcFunc, $settings;

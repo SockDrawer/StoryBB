@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 namespace StoryBB\Search;
@@ -18,7 +18,13 @@ namespace StoryBB\Search;
 class Standard extends API
 {
 	/**
-	 * {@inheritDoc}
+	 * Check whether the specific search operation can be performed by this API.
+	 * The operations are the functions listed in the interface, if not supported
+	 * they need not be declared
+	 *
+	 * @param string $methodName The method
+	 * @param array $query_params Any parameters for the query
+	 * @return boolean Whether or not the specified method is supported
 	 */
 	public function supportsMethod($methodName, $query_params = null)
 	{

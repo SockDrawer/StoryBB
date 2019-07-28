@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 namespace StoryBB\Template\Helper;
@@ -17,6 +17,7 @@ namespace StoryBB\Template\Helper;
  */
 class Controls
 {
+	/** @var $menu_context Local storage for a menu to be rendered by the template */
 	protected static $menu_context;
 
 	/**

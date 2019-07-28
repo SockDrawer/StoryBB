@@ -7,8 +7,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * The main entrance point for the 'Posts and topics' screen.
@@ -114,7 +116,7 @@ function ModifyBBCSettings($return_config = false)
 
 		// Clean up the tags.
 		$bbcTags = [];
-		foreach (parse_bbc(false) as $tag)
+		foreach (Parser::parse_bbc(false) as $tag)
 			$bbcTags[] = $tag['tag'];
 
 		if (!isset($_POST['disabledBBC_enabledTags']))

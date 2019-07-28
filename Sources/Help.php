@@ -7,8 +7,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * Redirect to the user help ;).
@@ -135,7 +137,7 @@ function HelpPolicy()
 		'{$age}' => $modSettings['minimum_age'],
 		'{$cookiepolicy}' => $scripturl . '?action=help;sa=cookies',
 	];
-	$context['policy_text'] = parse_bbc(strtr($row['revision_text'], $replacements), false);
+	$context['policy_text'] = Parser::parse_bbc(strtr($row['revision_text'], $replacements), false);
 	$context['last_updated'] = timeformat($row['last_change']);
 
 	$context['page_title'] = $context['policy_name'];

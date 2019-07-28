@@ -8,10 +8,11 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 use LightnCandy\LightnCandy;
+use StoryBB\Helper\Parser;
 
 /**
  * !!!Compatibility!!!
@@ -968,7 +969,7 @@ function legalise_bbc($text)
 	$disabled = empty($modSettings['disabledBBC']) ? [] : array_flip(explode(',', strtolower($modSettings['disabledBBC'])));
 
 	// Get a list of all the tags that are not disabled.
-	$all_tags = parse_bbc(false);
+	$all_tags = Parser::parse_bbc(false);
 	$valid_tags = [];
 	$self_closing_tags = [];
 	foreach ($all_tags as $tag)
@@ -1450,7 +1451,6 @@ function create_control_richedit($editorOptions)
 	$context['controls']['richedit'][$editorOptions['id']] = array(
 		'id' => $editorOptions['id'],
 		'value' => $editorOptions['value'],
-		'rich_value' => $editorOptions['value'], // 2.0 editor compatibility
 		'rich_active' => empty($modSettings['disable_wysiwyg']) && (!empty($options['wysiwyg_default']) || !empty($editorOptions['force_rich']) || !empty($_REQUEST[$editorOptions['id'] . '_mode'])),
 		'disable_smiley_box' => !empty($editorOptions['disable_smiley_box']),
 		'columns' => isset($editorOptions['columns']) ? $editorOptions['columns'] : 60,
@@ -1589,7 +1589,6 @@ function create_control_richedit($editorOptions)
 		);
 
 		// Allow mods to modify BBC buttons.
-		// Note: pass the array here is not necessary and is deprecated, but it is kept for backward compatibility with 2.0
 		call_integration_hook('integrate_bbc_buttons', array(&$context['bbc_tags'], &$editor_tag_map));
 
 		// Show the toggle?
@@ -2008,7 +2007,7 @@ function create_control_verification(&$verificationOptions, $do_test = false)
 			$row = &$modSettings['question_id_cache']['questions'][$q];
 			$thisVerification['questions'][] = array(
 				'id' => $q,
-				'q' => parse_bbc($row['question']),
+				'q' => Parser::parse_bbc($row['question']),
 				'is_error' => !empty($incorrectQuestions) && in_array($q, $incorrectQuestions),
 				// Remember a previous submission?
 				'a' => isset($_REQUEST[$verificationOptions['id'] . '_vv'], $_REQUEST[$verificationOptions['id'] . '_vv']['q'], $_REQUEST[$verificationOptions['id'] . '_vv']['q'][$q]) ? $smcFunc['htmlspecialchars']($_REQUEST[$verificationOptions['id'] . '_vv']['q'][$q]) : '',

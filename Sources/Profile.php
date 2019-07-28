@@ -9,7 +9,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 /**
@@ -1065,7 +1065,7 @@ function loadCustomFields($memID, $area = 'summary')
 
 		// Parse BBCode
 		if ($row['bbc'])
-			$output_html = parse_bbc($output_html);
+			$output_html = Parser::parse_bbc($output_html);
 		elseif ($row['field_type'] == 'textarea')
 			// Allow for newlines at least
 			$output_html = strtr($output_html, array("\n" => '<br>'));

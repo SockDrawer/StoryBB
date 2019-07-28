@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 namespace StoryBB\Schema;
@@ -16,10 +16,11 @@ use StoryBB\Schema\InvalidIndexException;
 use StoryBB\Schema\InvalidIndexTypeException;
 
 /**
- * This class handles alerts.
+ * This class handles indexes.
  */
 class Index
 {
+	/** @var $index The properties of the index this object represents */
 	private $index;
 
 	/**

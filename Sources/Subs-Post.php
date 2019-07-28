@@ -9,8 +9,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * Takes a message and parses it, returning nothing.
@@ -194,7 +196,7 @@ function preparsecode(&$message, $previewing = false)
 
 	require_once($sourcedir . '/Subs.php');
 
-	foreach (($codes = parse_bbc(false)) as $code)
+	foreach (($codes = Parser::parse_bbc(false)) as $code)
 		if (!in_array($code['tag'], $allowedEmpty))
 			$alltags[] = $code['tag'];
 
@@ -901,7 +903,7 @@ function sendpm($recipients, $subject, $message, $store_outbox = false, $from = 
 	if (empty($modSettings['disallow_sendBody']))
 	{
 		censorText($message);
-		$message = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($smcFunc['htmlspecialchars']($message), false), array('<br>' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
+		$message = trim(un_htmlspecialchars(strip_tags(strtr(Parser::parse_bbc($smcFunc['htmlspecialchars']($message), false), array('<br>' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 	}
 	else
 		$message = '';
@@ -1000,7 +1002,7 @@ function sendNotifications($topics, $type, $exclude = [], $members_only = [])
 		censorText($row['subject']);
 		censorText($row['body']);
 		$row['subject'] = un_htmlspecialchars($row['subject']);
-		$row['body'] = trim(un_htmlspecialchars(strip_tags(strtr(parse_bbc($row['body'], false, $row['id_last_msg']), array('<br>' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
+		$row['body'] = trim(un_htmlspecialchars(strip_tags(strtr(Parser::parse_bbc($row['body'], false, $row['id_last_msg']), array('<br>' => "\n", '</div>' => "\n", '</li>' => "\n", '&#91;' => '[', '&#93;' => ']')))));
 
 		StoryBB\Task::batch_queue_adhoc('StoryBB\\Task\\Adhoc\\CreatePostNotify', [
 			'msgOptions' => array(

@@ -8,8 +8,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * Show the list of topics in this board, along with any child boards.
@@ -409,7 +411,7 @@ function MessageIndex()
 			if (!empty($modSettings['preview_characters']))
 			{
 				// Limit them to $modSettings['preview_characters'] characters
-				$row['first_body'] = strip_tags(strtr(parse_bbc($row['first_body'], $row['first_smileys'], $row['id_first_msg']), array('<br>' => '&#10;')));
+				$row['first_body'] = strip_tags(strtr(Parser::parse_bbc($row['first_body'], $row['first_smileys'], $row['id_first_msg']), array('<br>' => '&#10;')));
 				if ($smcFunc['strlen']($row['first_body']) > $modSettings['preview_characters'])
 					$row['first_body'] = $smcFunc['substr']($row['first_body'], 0, $modSettings['preview_characters']) . '...';
 
@@ -425,7 +427,7 @@ function MessageIndex()
 				}
 				else
 				{
-					$row['last_body'] = strip_tags(strtr(parse_bbc($row['last_body'], $row['last_smileys'], $row['id_last_msg']), array('<br>' => '&#10;')));
+					$row['last_body'] = strip_tags(strtr(Parser::parse_bbc($row['last_body'], $row['last_smileys'], $row['id_last_msg']), array('<br>' => '&#10;')));
 					if ($smcFunc['strlen']($row['last_body']) > $modSettings['preview_characters'])
 						$row['last_body'] = $smcFunc['substr']($row['last_body'], 0, $modSettings['preview_characters']) . '...';
 
@@ -759,7 +761,6 @@ function MessageIndex()
 	loadJavaScriptFile('topic.js', array('defer' => false), 'sbb_topic');
 
 	// Allow adding new buttons easily.
-	// Note: $context['normal_buttons'] is added for backward compatibility with 2.0, but is deprecated and should not be used
 	call_integration_hook('integrate_messageindex_buttons', array(&$context['normal_buttons']));
 }
 

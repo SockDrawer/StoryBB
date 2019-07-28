@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 namespace StoryBB\Model;
@@ -340,7 +340,7 @@ class Post
 					)
 				);
 
-				$flag = $smcFunc['db_affected_rows']() != 0;
+				$flag = $smcFunc['db']->affected_rows() != 0;
 			}
 
 			if (empty($flag))
@@ -572,7 +572,7 @@ class Post
 				)
 			);
 
-			$flag = $smcFunc['db_affected_rows']() != 0;
+			$flag = $smcFunc['db']->affected_rows() != 0;
 
 			if (empty($flag))
 			{

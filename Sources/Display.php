@@ -8,8 +8,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * The central part of the board - topic display.
@@ -632,7 +634,7 @@ function Display()
 		$context['poll'] = [
 			'id' => $context['topicinfo']['id_poll'],
 			'image' => 'normal_' . (empty($pollinfo['voting_locked']) ? 'poll' : 'locked_poll'),
-			'question' => parse_bbc($pollinfo['question']),
+			'question' => Parser::parse_bbc($pollinfo['question']),
 			'total_votes' => $pollinfo['total'],
 			'change_vote' => !empty($pollinfo['change_vote']),
 			'is_locked' => !empty($pollinfo['voting_locked']),
@@ -719,7 +721,7 @@ function Display()
 				'voted_this' => $option['voted_this'] != -1,
 				'bar_ndt' => $bar > 0 ? '<div class="bar" style="width: ' . $bar . '%;"></div>' : '',
 				'bar_width' => $barWide,
-				'option' => parse_bbc($option['label']),
+				'option' => Parser::parse_bbc($option['label']),
 				'vote_button' => '<input type="' . ($pollinfo['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '">'
 			];
 		}
@@ -1264,9 +1266,7 @@ function Display()
 		unset($_SESSION['becomesUnapproved']);
 
 	// Allow adding new mod buttons easily.
-	// Note: $context['normal_buttons'] and $context['mod_buttons'] are added for backward compatibility with 2.0, but are deprecated and should not be used
 	call_integration_hook('integrate_display_buttons', [&$context['normal_buttons']]);
-	// Note: integrate_mod_buttons is no more necessary and deprecated, but is kept for backward compatibility with 2.0
 	call_integration_hook('integrate_mod_buttons', [&$context['mod_buttons']]);
 
 	// Load the drafts js file
@@ -1489,7 +1489,7 @@ function prepareDisplayContext($reset = false)
 	censorText($message['subject']);
 
 	// Run BBC interpreter on the message.
-	$message['body'] = parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
+	$message['body'] = Parser::parse_bbc($message['body'], $message['smileys_enabled'], $message['id_msg']);
 
 	// If it's in the recycle bin we need to override whatever icon we did have.
 	if (!empty($board_info['recycle']))

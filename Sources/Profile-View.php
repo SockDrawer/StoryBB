@@ -7,10 +7,11 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 use StoryBB\Helper\IP;
+use StoryBB\Helper\Parser;
 
 /**
  * View a summary.
@@ -43,8 +44,7 @@ function summary($memID)
 	$context['disabled_fields'] = isset($modSettings['disabled_profile_fields']) ? array_flip(explode(',', $modSettings['disabled_profile_fields'])) : [];
 	// Menu tab
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['summary'],
-		'icon_class' => 'members main_icons'
+		'title' => $txt['summary']
 	);
 
 	// See if they have broken any warning levels...
@@ -555,7 +555,6 @@ function showPosts($memID)
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['showPosts'],
 		'description' => $txt['showPosts_help'],
-		'icon_class' => 'members main_icons',
 		'tabs' => array(
 			'messages' => array(
 			),
@@ -794,7 +793,7 @@ function showPosts($memID)
 		censorText($row['subject']);
 
 		// Do the code.
-		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
+		$row['body'] = Parser::parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// And the array...
 		$context['posts'][$counter += $reverse ? -1 : 1] = array(
@@ -1365,8 +1364,7 @@ function statPanel($memID)
 	$context['num_posts'] = comma_format($user_profile[$memID]['posts']);
 	// Menu tab
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['statPanel_generalStats'] . ' - ' . $context['member']['name'],
-		'icon_class' => 'user_stats main_icons'
+		'title' => $txt['statPanel_generalStats'] . ' - ' . $context['member']['name']
 	);
 
 	// Number of topics started and Number polls started
@@ -1552,7 +1550,6 @@ function tracking($memID)
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['tracking'],
 		'description' => $txt['tracking_description'],
-		'icon_class' => 'members main_icons',
 		'tabs' => array(
 			'activity' => [],
 			'ip' => [],
@@ -2576,8 +2573,8 @@ function list_getProfileEdits($start, $items_per_page, $sort, $memID)
 			'member_link' => $txt['trackEdit_deleted_member'],
 			'action' => $row['action'],
 			'action_text' => $action_text,
-			'before' => !empty($extra['previous']) ? ($parse_bbc ? parse_bbc($extra['previous']) : $extra['previous']) : '',
-			'after' => !empty($extra['new']) ? ($parse_bbc ? parse_bbc($extra['new']) : $extra['new']) : '',
+			'before' => !empty($extra['previous']) ? ($parse_bbc ? Parser::parse_bbc($extra['previous']) : $extra['previous']) : '',
+			'after' => !empty($extra['new']) ? ($parse_bbc ? Parser::parse_bbc($extra['new']) : $extra['new']) : '',
 			'time' => timeformat($row['log_time']),
 		);
 	}

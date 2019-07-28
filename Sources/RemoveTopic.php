@@ -8,7 +8,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 /*	The contents of this file handle the deletion of topics, posts, and related
@@ -1001,7 +1001,7 @@ function removeMessage($message, $decreasePostCount = true)
 			'id_msg' => $message,
 		)
 	);
-	if ($smcFunc['db_affected_rows']() != 0)
+	if ($smcFunc['db']->affected_rows() != 0)
 	{
 		require_once($sourcedir . '/ModerationCenter.php');
 		updateSettings(array('last_mod_report_action' => time()));

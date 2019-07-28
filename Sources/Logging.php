@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 /**
@@ -111,7 +111,7 @@ function writeLog($force = false)
 		);
 
 		// Guess it got deleted.
-		if ($smcFunc['db_affected_rows']() == 0)
+		if ($smcFunc['db']->affected_rows() == 0)
 			$_SESSION['log_time'] = 0;
 	}
 	else
@@ -352,7 +352,7 @@ function trackStats($stats = [])
 		WHERE date = {date:current_date}',
 		$update_parameters
 	);
-	if ($smcFunc['db_affected_rows']() == 0)
+	if ($smcFunc['db']->affected_rows() == 0)
 	{
 		$smcFunc['db_insert']('ignore',
 			'{db_prefix}log_activity',

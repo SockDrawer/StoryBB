@@ -7,8 +7,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * The news dispatcher; doesn't do anything, just delegates.
@@ -275,7 +277,7 @@ function list_getNews()
 		$admin_current_news[$id] = array(
 			'id' => $id,
 			'unparsed' => un_preparsecode($line),
-			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', parse_bbc($line)),
+			'parsed' => preg_replace('~<([/]?)form[^>]*?[>]*>~i', '<em class="smalltext">&lt;$1form&gt;</em>', Parser::parse_bbc($line)),
 		);
 
 	$admin_current_news['last'] = array(
@@ -432,7 +434,7 @@ function prepareMailingForPreview()
 		{
 			$enablePostHTML = $modSettings['enablePostHTML'];
 			$modSettings['enablePostHTML'] = $context['send_html'];
-			$context[$key] = parse_bbc($context[$key]);
+			$context[$key] = Parser::parse_bbc($context[$key]);
 			$modSettings['enablePostHTML'] = $enablePostHTML;
 		}
 

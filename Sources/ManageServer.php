@@ -53,8 +53,10 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 /**
  * This is the main dispatcher. Sets up all the available sub-actions, all the tabs and selects
@@ -705,7 +707,6 @@ function prepareServerSettingsContext(&$config_vars)
 
 /**
  * Helper function, it sets up the context for database settings.
- * @todo see rev. 10406 from 2.1-requests
  *
  * @param array $config_vars An array of configuration variables
  */
@@ -891,7 +892,7 @@ function prepareDBSettingContext(&$config_vars)
 	if (!empty($bbcChoice))
 	{
 		// What are the options, eh?
-		$temp = parse_bbc(false);
+		$temp = Parser::parse_bbc(false);
 		$bbcTags = [];
 		foreach ($temp as $tag)
 			$bbcTags[] = $tag['tag'];
@@ -1077,7 +1078,6 @@ function saveSettings(&$config_vars)
 
 /**
  * Helper function for saving database settings.
- * @todo see rev. 10406 from 2.1-requests
  *
  * @param array $config_vars An array of configuration variables
  */
@@ -1175,7 +1175,7 @@ function saveDBSettings(&$config_vars)
 		{
 
 			$bbcTags = [];
-			foreach (parse_bbc(false) as $tag)
+			foreach (Parser::parse_bbc(false) as $tag)
 				$bbcTags[] = $tag['tag'];
 
 			if (!isset($_POST[$var[1] . '_enabledTags']))

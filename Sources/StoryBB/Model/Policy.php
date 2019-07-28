@@ -7,7 +7,7 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 namespace StoryBB\Model;
@@ -202,7 +202,7 @@ class Policy
 					'language' => $language,
 				])
 			);
-			if ($smcFunc['db_affected_rows']() == 0)
+			if ($smcFunc['db']->affected_rows() == 0)
 			{
 				// Hmm, we didn't change a row? Guess we're adding a new language we didn't already have.
 				$smcFunc['db_insert']('insert',

@@ -6,10 +6,11 @@
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
 
 use StoryBB\Helper\Autocomplete;
+use StoryBB\Helper\Parser;
 
 /**
  * Setup to fetch the HTML for the characters popup (excluding all other forum chrome)
@@ -214,7 +215,7 @@ function character_profile($memID)
 	$context['character']['days_registered'] = (int) ((time() - $context['character']['date_created']) / (3600 * 24));
 	$context['character']['date_created_format'] = timeformat($context['character']['date_created']);
 	$context['character']['last_active_format'] = timeformat($context['character']['last_active']);
-	$context['character']['signature_parsed'] = parse_bbc($context['character']['signature'], true, 'sig_char' . $context['character']['id_character']);
+	$context['character']['signature_parsed'] = Parser::parse_bbc($context['character']['signature'], true, 'sig_char' . $context['character']['id_character']);
 	if (empty($context['character']['date_created']) || $context['character']['days_registered'] < 1)
 		$context['character']['posts_per_day'] = $txt['not_applicable'];
 	else
@@ -293,7 +294,7 @@ function char_create()
 					0, 0],
 				['id_character']
 			);
-			$context['character']['id_character'] = $smcFunc['db_insert_id']();
+			$context['character']['id_character'] = $smcFunc['db']->inserted_id();
 			trackStats(array('chars' => '+'));
 
 			if (!empty($context['character']['sheet']))
@@ -493,8 +494,7 @@ function char_edit()
 			{
 				$primary_group = isset($changes['main_char_group']) ? $changes['main_char_group'] : $context['character']['main_char_group'];
 				$additional_groups = isset($changes['char_groups']) ? $changes['char_groups'] : $context['character']['char_groups'];
-				// Note that like the 2.1 core hook, this is read only...
-				// But unlike the 2.1 core hook, we actually provide which account it is...
+
 				call_integration_hook('integrate_profile_profileSaveCharGroups', array($context['id_member'], $context['character']['id_character'], $primary_group, $additional_groups));
 			}
 
@@ -575,7 +575,7 @@ function char_edit()
 	$form_value = un_preparsecode($form_value);
 	censorText($form_value);
 	$form_value = str_replace(array('"', '<', '>', '&nbsp;'), array('&quot;', '&lt;', '&gt;', ' '), $form_value);
-	$context['character']['signature_parsed'] = parse_bbc($context['character']['signature'], true, 'sig_char_' . $context['character']['id_character']);
+	$context['character']['signature_parsed'] = Parser::parse_bbc($context['character']['signature'], true, 'sig_char_' . $context['character']['id_character']);
 
 	require_once($sourcedir . '/Subs-Editor.php');
 	$editorOptions = array(
@@ -779,7 +779,6 @@ function char_posts()
 	$context[$context['profile_menu_name']]['tab_data'] = array(
 		'title' => $txt['showPosts'],
 		'description' => $txt['showPosts_help_char'],
-		'icon_class' => 'members main_icons',
 		'tabs' => array(
 			'posts' => array(
 			),
@@ -981,7 +980,7 @@ function char_posts()
 		censorText($row['subject']);
 
 		// Do the code.
-		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
+		$row['body'] = Parser::parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// And the array...
 		$context['posts'][$counter += $reverse ? -1 : 1] = array(
@@ -1200,8 +1199,7 @@ function char_stats()
 	$context['num_posts'] = comma_format($context['character']['posts']);
 	// Menu tab
 	$context[$context['profile_menu_name']]['tab_data'] = array(
-		'title' => $txt['statPanel_generalStats'] . ' - ' . $context['character']['character_name'],
-		'icon_class' => 'user_stats main_icons'
+		'title' => $txt['statPanel_generalStats'] . ' - ' . $context['character']['character_name']
 	);
 
 	$context['linktree'][] = array(
@@ -1420,7 +1418,7 @@ function char_sheet()
 	}
 
 	if (!empty($context['character']['sheet_details']['sheet_text'])) {
-	$context['character']['sheet_details']['sheet_text'] = parse_bbc($context['character']['sheet_details']['sheet_text'], false);
+	$context['character']['sheet_details']['sheet_text'] = Parser::parse_bbc($context['character']['sheet_details']['sheet_text'], false);
 	} else {
 		$context['character']['sheet_details']['sheet_text'] = '';
 	}
@@ -1523,7 +1521,7 @@ function char_sheet()
 			);
 			while ($row = $smcFunc['db_fetch_assoc']($request))
 			{
-				$row['sheet_comment_parsed'] = parse_bbc($row['sheet_comment'], true, 'sheet-comment-' . $row['id_comment']);
+				$row['sheet_comment_parsed'] = Parser::parse_bbc($row['sheet_comment'], true, 'sheet-comment-' . $row['id_comment']);
 				$context['sheet_comments'][$row['id_comment']] = $row;
 			}
 			$smcFunc['db_free_result']($request);
@@ -1586,7 +1584,7 @@ function char_sheet_history()
 			$context['history_items'][$row['approved_time'] . 'a' . $row['id_version']] = $row['id_version'];
 		}
 		$row['type'] = 'sheet';
-		$row['sheet_text_parsed'] = parse_bbc($row['sheet_text'], false);
+		$row['sheet_text_parsed'] = Parser::parse_bbc($row['sheet_text'], false);
 		$row['created_time_format'] = timeformat($row['created_time']);
 		$row['approved_time_format'] = timeformat($row['approved_time']);
 		if (empty($row['approver_name']))
@@ -1611,7 +1609,7 @@ function char_sheet_history()
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
 		$row['type'] = 'comment';
-		$row['sheet_comment_parsed'] = parse_bbc($row['sheet_comment'], true, 'sheet-comment-' . $row['id_comment']);
+		$row['sheet_comment_parsed'] = Parser::parse_bbc($row['sheet_comment'], true, 'sheet-comment-' . $row['id_comment']);
 		$row['time_posted_format'] = timeformat($row['time_posted_format']);
 		$context['history_items'][$row['time_posted'] . 'c' . $row['id_comment']] = $row;
 	}
@@ -1627,10 +1625,10 @@ function char_sheet_history()
 	$context['sub_template'] = 'profile_character_sheet_history';
 
 	addInlineJavascript('
-	$(".click_collapse, .windowbg2 .sheet").hide();
+	$(".click_collapse, .windowbg .sheet").hide();
 	$(".click_expand, .click_collapse").on("click", function(e) {
 		e.preventDefault();
-		$(this).closest(".windowbg2").find(".click_expand, .click_collapse, .sheet").toggle();
+		$(this).closest(".windowbg").find(".click_expand, .click_collapse, .sheet").toggle();
 	});
 	', true);
 }
@@ -2062,7 +2060,7 @@ function char_sheet_compare()
 
 	// And parse the bbc.
 	foreach (['original_sheet', 'sheet_details'] as $sheet) {
-		$context['character'][$sheet]['sheet_text_parsed'] = parse_bbc($context['character'][$sheet]['sheet_text'], false);
+		$context['character'][$sheet]['sheet_text_parsed'] = Parser::parse_bbc($context['character'][$sheet]['sheet_text'], false);
 	}
 
 	$context['page_title'] = $txt['char_sheet_compare'];

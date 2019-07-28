@@ -1,12 +1,16 @@
 <?php
 
 /**
+ * Integrates StoryBB functions from outside StoryBB.
+ *
  * @package StoryBB (storybb.org) - A roleplayer's forum software
  * @copyright 2018 StoryBB and individual contributors (see contributors.txt)
  * @license 3-clause BSD (see accompanying LICENSE file)
  *
- * @version 3.0 Alpha 1
+ * @version 1.0 Alpha 1
  */
+
+use StoryBB\Helper\Parser;
 
 // Don't do anything if StoryBB is already loaded.
 if (defined('STORYBB'))
@@ -275,7 +279,7 @@ function ssi_recentPosts($num_recent = 8, $exclude_boards = null, $include_board
 	else
 		$exclude_boards = empty($exclude_boards) ? [] : (is_array($exclude_boards) ? $exclude_boards : array($exclude_boards));
 
-	// What about including certain boards - note we do some protection here as pre-2.0 didn't have this parameter.
+	// What about including certain boards?
 	if (is_array($include_boards) || (int) $include_boards === $include_boards)
 	{
 		$include_boards = is_array($include_boards) ? $include_boards : array($include_boards);
@@ -382,7 +386,7 @@ function ssi_queryPosts($query_where = '', $query_where_params = [], $query_limi
 	$posts = [];
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
+		$row['body'] = Parser::parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		// Censor it!
 		censorText($row['subject']);
@@ -546,7 +550,7 @@ function ssi_recentTopics($num_recent = 8, $exclude_boards = null, $include_boar
 	$posts = [];
 	while ($row = $smcFunc['db_fetch_assoc']($request))
 	{
-		$row['body'] = strip_tags(strtr(parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br>' => '&#10;')));
+		$row['body'] = strip_tags(strtr(Parser::parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']), array('<br>' => '&#10;')));
 		if ($smcFunc['strlen']($row['body']) > 128)
 			$row['body'] = $smcFunc['substr']($row['body'], 0, 128) . '...';
 
@@ -1317,7 +1321,7 @@ function ssi_recentPoll($topPollInstead = false, $output_method = 'echo')
 			'id' => 'options-' . ($topPollInstead ? 'top-' : 'recent-') . $i,
 			'percent' => $bar,
 			'votes' => $option[1],
-			'option' => parse_bbc($option[0]),
+			'option' => Parser::parse_bbc($option[0]),
 			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . ($topPollInstead ? 'top-' : 'recent-') . $i . '" value="' . $i . '">'
 		);
 	}
@@ -1485,7 +1489,7 @@ function ssi_showPoll($topic = null, $output_method = 'echo')
 			'id' => 'options-' . $i,
 			'percent' => $bar,
 			'votes' => $option[1],
-			'option' => parse_bbc($option[0]),
+			'option' => Parser::parse_bbc($option[0]),
 			'vote_button' => '<input type="' . ($row['max_votes'] > 1 ? 'checkbox' : 'radio') . '" name="options[]" id="options-' . $i . '" value="' . $i . '">'
 		);
 	}
@@ -1833,7 +1837,7 @@ function ssi_boardNews($board = null, $limit = null, $start = null, $length = nu
 			$row['body'] .= '...';
 		}
 
-		$row['body'] = parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
+		$row['body'] = Parser::parse_bbc($row['body'], $row['smileys_enabled'], $row['id_msg']);
 
 		if (!empty($recycle_board) && $row['id_board'] == $recycle_board)
 			$row['icon'] = 'recycled';
