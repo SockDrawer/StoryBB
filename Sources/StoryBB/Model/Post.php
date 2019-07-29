@@ -12,7 +12,6 @@
 
 namespace StoryBB\Model;
 
-use StoryBB\Achievement;
 use StoryBB\Task;
 
 /**
@@ -229,9 +228,10 @@ class Post
 
 			if ($msgOptions['approved'])
 			{
-				Achievement::trigger_award_achievement('account_topic_starter', $posterOptions['id'], $posterOptions['char_id']);
-				Achievement::trigger_award_achievement('character_topic_starter', $posterOptions['id'], $posterOptions['char_id']);
-				Achievement::trigger_award_achievement('topic_starter', $posterOptions['id'], $posterOptions['char_id']);
+				Task::queue_adhoc('StoryBB\\Task\\Adhoc\\Achievement\\TopicStarter', [
+					'account' => $posterOptions['id'],
+					'character' => $posterOptions['char_id'],
+				]);
 			}
 
 			// What if we want to export new topics out to a CMS?
