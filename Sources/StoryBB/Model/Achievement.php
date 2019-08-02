@@ -153,5 +153,9 @@ class Achievement
 		);
 
 		updateMemberData($account_id, ['alerts' => '+']);
+
+		Achievement::trigger_award_achievement('account_meta_achievement', $account_id, $character_id);
+		Achievement::trigger_award_achievement('character_meta_achievement', $account_id, $character_id);
+		Achievement::trigger_award_achievement('meta_achievement', $account_id, $character_id);
 	}
 }

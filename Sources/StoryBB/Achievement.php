@@ -28,9 +28,12 @@ class Achievement
 	{
 		return [
 			'account_birthday' => 'StoryBB\\Achievement\\Criteria\\AccountBirthday',
+			'account_meta_achievement' => 'StoryBB\\Achievement\\Criteria\\AccountMetaAchievement',
 			'account_topic_starter' => 'StoryBB\\Achievement\\Criteria\\AccountTopicStarter',
 			'character_birthday' => 'StoryBB\\Achievement\\Criteria\\CharacterBirthday',
+			'character_meta_achievement' => 'StoryBB\\Achievement\\Criteria\\CharacterMetaAchievement',
 			'character_topic_starter' => 'StoryBB\\Achievement\\Criteria\\CharacterTopicStarter',
+			'meta_achievement' => 'StoryBB\\Achievement\\Criteria\\MetaAchievement',
 			'topic_starter' => 'StoryBB\\Achievement\\Criteria\\TopicStarter',
 		];
 	}
