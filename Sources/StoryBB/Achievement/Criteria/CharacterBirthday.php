@@ -35,15 +35,9 @@ class CharacterBirthday extends AbstractCriteria implements CharacterAchievement
 	{
 		global $smcFunc;
 
-		if (!static::validate_parameters($criteria))
-		{
-			return;
-		}
-
-		$criteria = json_decode($criteria, true);
+		$criteria = static::validate_parameters($criteria);
 
 		$birthday_timestamp = strtotime('-' . $criteria['years'] . ' years');
-		$matches = [];
 
 		$result = $smcFunc['db_query']('', '
 			SELECT id_member, id_character, date_created

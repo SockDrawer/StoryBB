@@ -33,12 +33,7 @@ class MetaAchievement extends AbstractCriteria implements AccountAchievement
 	{
 		global $smcFunc;
 
-		if (!static::validate_parameters($criteria))
-		{
-			return;
-		}
-
-		$criteria = json_decode($criteria, true);
+		$criteria = static::validate_parameters($criteria);
 
 		$achievements = array_diff(array_map('intval', $criteria['achievements']), [0]);
 		if (empty($achievements))

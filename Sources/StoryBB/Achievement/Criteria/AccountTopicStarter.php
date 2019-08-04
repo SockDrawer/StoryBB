@@ -39,14 +39,7 @@ class AccountTopicStarter extends AbstractCriteria implements AccountAchievement
 	{
 		global $smcFunc;
 
-		if (!static::validate_parameters($criteria))
-		{
-			return;
-		}
-
-		$criteria = json_decode($criteria, true);
-
-		$matches = [];
+		$criteria = static::validate_parameters($criteria);
 
 		$result = $smcFunc['db_query']('', '
 			SELECT m.id_creator AS id_member, m.id_character

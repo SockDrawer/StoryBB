@@ -35,12 +35,7 @@ class AccountBirthday extends AbstractCriteria implements AccountAchievement
 	{
 		global $smcFunc;
 
-		if (!static::validate_parameters($criteria))
-		{
-			return;
-		}
-
-		$criteria = json_decode($criteria, true);
+		$criteria = static::validate_parameters($criteria);
 
 		$birthday_timestamp = strtotime('-' . $criteria['years'] . ' years');
 		$matches = [];

@@ -12,6 +12,8 @@
 
 namespace StoryBB\Achievement\Criteria;
 
+use RuntimeException;
+
 /**
  * This class handles identifying whether a character has a birthday or not.
  */
@@ -41,7 +43,7 @@ abstract class AbstractCriteria
 		{
 			if (!$criterion_type['optional'] && !isset($criteria[$criterion_name]))
 			{
-				return false;
+				throw new RuntimeException('Criteria type ' . $criterion_name . ' is missing but required');
 			}
 		}
 
@@ -49,7 +51,7 @@ abstract class AbstractCriteria
 		{
 			if (!isset($valid_criteria[$criterion_name]))
 			{
-				return false;
+				throw new RuntimeException('Criteria type ' . $criterion_name . ' is not valid for this criteria');
 			}
 			$this_criterion = $valid_criteria[$criterion_name];
 			switch ($this_criterion['type'])
@@ -57,21 +59,54 @@ abstract class AbstractCriteria
 				case 'int':
 					if (!is_int($criterion_requirements) && (string) (int) $criterion_requirements != $criterion_requirements)
 					{
-						return false;
+						throw new RuntimeException('Criteria type ' . $criterion_name . ' is not of type int');
 					}
 					if (isset($this_criterion['min']) && $criterion_requirements < $this_criterion['min'])
 					{
-						return false;
+						throw new RuntimeException('Criteria type ' . $criterion_name . ' is lower than legal mininum ' . $this_criterion['min']);
 					}
 					if (isset($this_criterion['max']) && $criterion_requirements > $this_criterion['max'])
 					{
-						return false;
+						throw new RuntimeException('Criteria type ' . $criterion_name . ' is higher than legal maxinum ' . $this_criterion['max']);
+					}
+					$criterion_requirements = (int) $criterion_requirements;
+					break;
+
+				case 'array_int':
+					if (!is_array($criterion_requirements))
+					{
+						throw new RuntimeException('Criteria type ' . $criterion_name . ' is not of type int');
+					}
+					foreach ($criterion_requirements as $k => $v)
+					{
+						if (!is_int($v) && (string) (int) $v != $v)
+						{
+							throw new RuntimeException('Criteria type ' . $criterion_name . ', key ' . $k . ', value ' . $v . ' is not an int');
+						}
+						if (isset($this_criterion['min']) && $v < $this_criterion['min'])
+						{
+							throw new RuntimeException('Criteria type ' . $criterion_name . ' has value ' . $v . ' lower than legal mininum ' . $this_criterion['min']);
+						}
+						if (isset($this_criterion['max']) && $v > $this_criterion['max'])
+						{
+							throw new RuntimeException('Criteria type ' . $criterion_name . ' has value ' . $v . ' higher than legal maxinum ' . $this_criterion['max']);
+						}
+						$criterion_requirements[$k] = (int) $v;
 					}
 					break;
+
+				case 'boards':
+					break;
+
+				default:
+					throw new RuntimeException('Unknown criteria type ' . $this_criterion['type']);
+					break;
 			}
+
+			$criteria[$criterion_name] = $criterion_requirements;
 		}
 
-		return true;
+		return $criteria;
 	}
 
 	abstract public static function get_criteria_members($criteria, $account_id = null, $character_id = null);

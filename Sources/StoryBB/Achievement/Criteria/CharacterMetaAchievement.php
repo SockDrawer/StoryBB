@@ -33,18 +33,9 @@ class CharacterMetaAchievement extends AbstractCriteria implements CharacterAchi
 	{
 		global $smcFunc;
 
-		if (!static::validate_parameters($criteria))
-		{
-			return;
-		}
+		$criteria = static::validate_parameters($criteria);
 
-		$criteria = json_decode($criteria, true);
-
-		$achievements = array_diff(array_map('intval', $criteria['achievements']), [0]);
-		if (empty($achievements))
-		{
-			return;
-		}
+		$achievements = $criteria['achievements'];
 
 		$result = $smcFunc['db_query']('', '
 			SELECT au.id_member, au.id_character
